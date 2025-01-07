@@ -1,7 +1,14 @@
 import { quizData } from "@/components/home/quizData";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface Iinitial {
+    questions: typeof quizData,
+    currentQuestionIndex: number,
+    userAnswers: (string | null)[],
+    quizComplete: boolean
+}
+
+const initialState: Iinitial = {
     questions: quizData,
     currentQuestionIndex: 0,
     userAnswers: Array(quizData.length).fill(null),// Initialize with null for each question

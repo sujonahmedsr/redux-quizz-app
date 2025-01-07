@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"; // Adjust path to your Card components
 import { Progress } from "@/components/ui/progress"; // Assuming you're using ShadCN Progress component
-import { useAppSelector } from "@/Redux/hook";
+import { useAppDispatch, useAppSelector } from "@/Redux/hook";
+import { Button } from "../ui/button";
+import { checkQuizResult } from "@/Redux/features/quizSlice";
 
 // Helper function to get performance rating and color based on the percentage
 const getPerformance = (percentage: number) => {
@@ -16,6 +18,8 @@ const getPerformance = (percentage: number) => {
 };
 
 const QuizSummary = () => {
+    const dispatch = useAppDispatch()
+
     const { questions, userAnswers } = useAppSelector((state) => state.quiz);
 
     // Calculate correct and incorrect answers
@@ -61,6 +65,7 @@ const QuizSummary = () => {
                         <p className="text-sm">Great job! Keep practicing to improve your performance.</p>
                     </div>
                 </CardContent>
+                <Button onClick={()=>dispatch(checkQuizResult())}>Check Quiz Result</Button>
             </Card>
         </div>
     );

@@ -5,22 +5,24 @@ interface Iinitial {
     questions: typeof quizData,
     currentQuestionIndex: number,
     userAnswers: (string | null)[],
-    quizComplete: boolean
+    quizComplete: boolean,
+    resultSummary: boolean
 }
 
 const initialState: Iinitial = {
     questions: quizData,
     currentQuestionIndex: 0,
     userAnswers: Array(quizData.length).fill(null),// Initialize with null for each question
-    quizComplete: false
+    quizComplete: false,
+    resultSummary: false
 }
 
 const quizSlice = createSlice({
     name: "Quiz",
     initialState,
     reducers: {
-        setAnswers: (state, action) =>{
-            const {questionIndex, answer} = action.payload
+        setAnswers: (state, action) => {
+            const { questionIndex, answer } = action.payload
             state.userAnswers[questionIndex] = answer
         },
         nextQuestion: (state) => {
@@ -36,7 +38,11 @@ const quizSlice = createSlice({
         completeQuiz: (state) => {
             state.quizComplete = true;
         },
+        checkQuizResult: (state) => {
+            state.resultSummary = true;
+            state.currentQuestionIndex = 0
+        }
     }
 })
-export const {setAnswers, nextQuestion, previousQuestion, completeQuiz } = quizSlice.actions
+export const { setAnswers, nextQuestion, previousQuestion, completeQuiz, checkQuizResult } = quizSlice.actions
 export default quizSlice.reducer

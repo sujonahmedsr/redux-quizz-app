@@ -44,5 +44,10 @@ const quizSlice = createSlice({
         }
     }
 })
-export const { setAnswers, nextQuestion, previousQuestion, completeQuiz, checkQuizResult } = quizSlice.actions
+export const { 
+    setAnswers,
+    nextQuestion,
+    previousQuestion,
+    completeQuiz,
+    checkQuizResult } = quizSlice.actions
 export default quizSlice.reducer

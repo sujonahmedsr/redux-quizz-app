@@ -1,6 +1,21 @@
 import { quizData } from "@/components/home/quizData";
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface QuizData {
+    question: string;
+    options: string[];
+    correctAnswer: string;
+}
+
+export type TQuiz = {
+    _id: string;
+    name: string;
+    description: string;
+    questions: QuizData[];
+    createdAt: Date;
+    updatedAt: Date;
+};
+
 interface Iinitial {
     questions: typeof quizData,
     currentQuestionIndex: number,
@@ -12,7 +27,7 @@ interface Iinitial {
 const initialState: Iinitial = {
     questions: quizData,
     currentQuestionIndex: 0,
-    userAnswers: Array(quizData.length).fill(null),// Initialize with null for each question
+    userAnswers: Array(quizData.length).fill(null),
     quizComplete: false,
     resultSummary: false
 }
@@ -47,7 +62,7 @@ const quizSlice = createSlice({
         }
     }
 })
-export const { 
+export const {
     setAnswers,
     nextQuestion,
     previousQuestion,

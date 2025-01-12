@@ -41,6 +41,9 @@ const quizSlice = createSlice({
         checkQuizResult: (state) => {
             state.resultSummary = true;
             state.currentQuestionIndex = 0
+        },
+        setQuiz: (state, action) => {
+            state.questions = action.payload
         }
     }
 })
@@ -49,5 +52,6 @@ export const {
     nextQuestion,
     previousQuestion,
     completeQuiz,
-    checkQuizResult } = quizSlice.actions
+    checkQuizResult,
+    setQuiz } = quizSlice.actions
 export default quizSlice.reducer

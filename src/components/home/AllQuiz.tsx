@@ -1,11 +1,13 @@
 import { useGetAllQuizQuery } from "@/Redux/api/quizApi/quizApi";
 import { useAppDispatch } from "@/Redux/hook";
 import { Card } from "../ui/card";
-import { setQuiz } from "@/Redux/features/quizSlice";
+import { QuizData, setQuiz, TQuiz } from "@/Redux/features/quizSlice";
 
 const AllQuiz = () => {
     const dispatch = useAppDispatch();
     const { data, isLoading } = useGetAllQuizQuery(undefined);
+    console.log(data);
+    
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -16,7 +18,7 @@ const AllQuiz = () => {
     };
     return (
         <div>
-            <div className="grid grid-cols-8 gap-4 ">
+            <div className="grid grid-cols-8 gap-4 p-5">
                 {data?.map(
                     (quiz: TQuiz, index: string) => (
                         console.log(quiz.questions),

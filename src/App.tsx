@@ -1,3 +1,4 @@
+import AllQuiz from "./components/home/AllQuiz"
 import Question from "./components/home/Question"
 import QuizSummary from "./components/home/QuizSummary"
 import ResultSummary from "./components/home/ResultSummary"
@@ -15,7 +16,7 @@ function App() {
         </div>
         <div className="flex flex-col items-center justify-center">
           <h1 className="text-center text-4xl mb-5">Quiz App</h1>
-          
+          <AllQuiz />
           {
             resultSummary ? <ResultSummary /> : !quizComplete ? <Question /> : <QuizSummary></QuizSummary>
           }

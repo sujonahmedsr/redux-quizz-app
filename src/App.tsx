@@ -19,7 +19,7 @@ function App() {
         <div className="flex flex-col items-center justify-center">
           <h1 className="text-center text-4xl mb-5">Quiz App</h1>
           <AddQuiz />
-          {/* <AllQuiz /> */}
+          <AllQuiz />
           {
             resultSummary ? <ResultSummary /> : !quizComplete ? <Question /> : <QuizSummary></QuizSummary>
           }

@@ -3,8 +3,8 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { title } from "process";
 import { toast } from "sonner";
+import { useAddQuizMutation } from "@/Redux/api/quizApi/quizApi";
 
 
 type TQuestion = {
@@ -20,6 +20,7 @@ type TQuizData = {
 }
 
 const AddQuiz = () => {
+    const [addQuiz, { isError, isSuccess }] = useAddQuizMutation()
     const [step, setStep] = useState(1)
     const [addQuestionStep, setAddQuestionStep] = useState(1)
     const [openAddQuestionModal, setOpenAddQuestionModal] = useState(false);
@@ -42,7 +43,7 @@ const AddQuiz = () => {
         }
         if (field === "question") {
             setNewQuestion((prev) => ({ ...prev, question: value }));
-        } 
+        }
         if (field === "option" && optionIndex !== undefined) {
             const updatedOptions = [...newQuestion.options];
             updatedOptions[optionIndex] = value;
@@ -73,11 +74,22 @@ const AddQuiz = () => {
         setQuizData((prev) => ({ ...prev, questions: updatedQuestions }));
     };
 
-    const handleSubmit = () => {
-        if(quizData.title === '' || quizData.description === '' || quizData.questions.length === 0){
-           return toast.error("Something went wrong")
+    const handleSubmit = async () => {
+        if (quizData.title === '' || quizData.description === '' || quizData.questions.length === 0) {
+            return toast.error("Something went wrong")
         }
-        console.log(quizData);
+
+        const res = await addQuiz(quizData)
+
+        if (isError || res.error){
+            toast.error("Something went wrong.")
+        }
+
+        if (isSuccess){
+            toast.success("Quiz Added.")
+        }
+        
+        
     }
 
 
@@ -109,13 +121,13 @@ const AddQuiz = () => {
                                 <Label htmlFor="title" className="text-right">
                                     Title
                                 </Label>
-                                <Input id="title" className="col-span-3" onChange={(e) => handleInputChanges(e, 'title')} value={quizData.title}/>
+                                <Input id="title" className="col-span-3" onChange={(e) => handleInputChanges(e, 'title')} value={quizData.title} />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="description" className="text-right">
                                     Description
                                 </Label>
-                                <Input id="description" className="col-span-3" onChange={(e) => handleInputChanges(e, 'description')} value={quizData.description}/>
+                                <Input id="description" className="col-span-3" onChange={(e) => handleInputChanges(e, 'description')} value={quizData.description} />
                             </div>
                         </div>
                     }
@@ -170,7 +182,7 @@ const AddQuiz = () => {
                     </DialogHeader>
                     {
                         addQuestionStep === 1 && <Input placeholder="Enter question"
-                        value={newQuestion.question} onChange={(e) => handleInputChanges(e, "question")} />
+                            value={newQuestion.question} onChange={(e) => handleInputChanges(e, "question")} />
                     }
                     {
                         addQuestionStep === 2 && newQuestion.options.map((option, i) => <Input key={i} placeholder={`option ${i + 1} `} value={option} onChange={(e) => handleInputChanges(e, "option", i)} />)
@@ -179,7 +191,7 @@ const AddQuiz = () => {
                         addQuestionStep === 3
                         &&
                         <select
-                        value={newQuestion.correctAnswer}
+                            value={newQuestion.correctAnswer}
                             className="w-full p-2 mt-2 border rounded-md"
                             onChange={(e) => handleCorrectAnswerSelect(e.target.value)}
                         >

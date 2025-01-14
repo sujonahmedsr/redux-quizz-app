@@ -92,7 +92,6 @@ const AddQuiz = () => {
         
     }
 
-
     return (
         <div className="my-5">
             <Dialog>

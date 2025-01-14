@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { title } from "process";
+import { toast } from "sonner";
 
 
 type TQuestion = {
@@ -32,9 +34,55 @@ const AddQuiz = () => {
         correctAnswer: "",
     })
 
+    const handleInputChanges = (e: React.ChangeEvent<HTMLInputElement>, field: string, optionIndex?: number) => {
+        const { value } = e.target
+
+        if (field === "title" || field === "description") {
+            setQuizData(prev => ({ ...prev, [field]: value }))
+        }
+        if (field === "question") {
+            setNewQuestion((prev) => ({ ...prev, question: value }));
+        } 
+        if (field === "option" && optionIndex !== undefined) {
+            const updatedOptions = [...newQuestion.options];
+            updatedOptions[optionIndex] = value;
+            setNewQuestion((prev) => ({ ...prev, options: updatedOptions }));
+        }
+    }
+
+    const handleCorrectAnswerSelect = (answer: string) => {
+        setNewQuestion((prev) => ({ ...prev, correctAnswer: answer }));
+    };
+
+    const addQuestion = () => {
+        setQuizData((prev) => ({
+            ...prev,
+            questions: [...prev.questions, newQuestion],
+        }));
+        setNewQuestion({
+            question: "",
+            options: ["", "", "", ""],
+            correctAnswer: "",
+        });
+        setOpenAddQuestionModal(false);
+        setAddQuestionStep(1);
+    };
+
+    const removeQuestion = (index: number) => {
+        const updatedQuestions = quizData.questions.filter((_, i) => i !== index);
+        setQuizData((prev) => ({ ...prev, questions: updatedQuestions }));
+    };
+
+    const handleSubmit = () => {
+        if(quizData.title === '' || quizData.description === '' || quizData.questions.length === 0){
+           return toast.error("Something went wrong")
+        }
+        console.log(quizData);
+    }
+
 
     return (
-        <div>
+        <div className="my-5">
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="destructive">Add Quiz</Button>
@@ -58,16 +106,16 @@ const AddQuiz = () => {
                     {
                         step === 1 && <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="Title" className="text-right">
+                                <Label htmlFor="title" className="text-right">
                                     Title
                                 </Label>
-                                <Input id="Title" className="col-span-3" />
+                                <Input id="title" className="col-span-3" onChange={(e) => handleInputChanges(e, 'title')} value={quizData.title}/>
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="Description" className="text-right">
+                                <Label htmlFor="description" className="text-right">
                                     Description
                                 </Label>
-                                <Input id="Description" className="col-span-3" />
+                                <Input id="description" className="col-span-3" onChange={(e) => handleInputChanges(e, 'description')} value={quizData.description}/>
                             </div>
                         </div>
                     }
@@ -79,6 +127,7 @@ const AddQuiz = () => {
                                         Q{index + 1}: {q.question}
                                     </Label>
                                     <Button
+                                        onClick={() => removeQuestion(index)}
                                         variant="outline"
                                         className="absolute top-2 right-2"
                                     >
@@ -102,7 +151,7 @@ const AddQuiz = () => {
                             step < 3 && <Button type="submit" onClick={() => setStep(step + 1)}>Next</Button>
                         }
                         {
-                            step === 3 && <Button variant="destructive">Submit Quiz</Button>
+                            step === 3 && <Button variant="destructive" onClick={handleSubmit}>Submit Quiz</Button>
                         }
                     </DialogFooter>
                 </DialogContent>
@@ -120,16 +169,19 @@ const AddQuiz = () => {
                         </DialogDescription>
                     </DialogHeader>
                     {
-                        addQuestionStep === 1 && <Input placeholder="Enter question" />
+                        addQuestionStep === 1 && <Input placeholder="Enter question"
+                        value={newQuestion.question} onChange={(e) => handleInputChanges(e, "question")} />
                     }
                     {
-                        addQuestionStep === 2 && newQuestion.options.map((option, i) => <Input placeholder={`option ${i + 1} `} value={option} />)
+                        addQuestionStep === 2 && newQuestion.options.map((option, i) => <Input key={i} placeholder={`option ${i + 1} `} value={option} onChange={(e) => handleInputChanges(e, "option", i)} />)
                     }
                     {
                         addQuestionStep === 3
                         &&
                         <select
+                        value={newQuestion.correctAnswer}
                             className="w-full p-2 mt-2 border rounded-md"
+                            onChange={(e) => handleCorrectAnswerSelect(e.target.value)}
                         >
                             {newQuestion.options.map((option, i) => (
                                 <option key={i} value={option}>
@@ -150,7 +202,7 @@ const AddQuiz = () => {
                                 Next
                             </Button>
                         ) : (
-                            <Button>Add Question</Button>
+                            <Button onClick={addQuestion}>Add Question</Button>
                         )}
                     </DialogFooter>
                 </DialogContent>

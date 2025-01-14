@@ -6,6 +6,7 @@ import ResultSummary from "./components/home/ResultSummary"
 import { ModeToggle } from "./components/mode-toggle"
 import { ThemeProvider } from "./components/theme-provider"
 import { useAppSelector } from "./Redux/hook"
+import {Toaster} from "sonner"
 
 function App() {
   const {quizComplete, resultSummary} = useAppSelector(state => state.quiz)
@@ -25,6 +26,7 @@ function App() {
           
         </div>
       </div>
+      <Toaster />
     </ThemeProvider>
   )
 }
